@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Drag and Drop v2</title>
+		
+		<script type="text/javascript" src="js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.7.2.custom.min.js"></script>
+		<script type="text/javascript" src="js/jquery.cookie.js"></script>
+		
+		<style type="text/css">
+			body{font:12px "Helvetica", sans-serif;}
+			body div#content{width:980px;margin:0 auto;}
+			div.recebeDrag{}
+			div.itemDrag{border:1px solid #f2f2f2;margin:4px!important;}
+			ul{list-style:square;}
+			ul li{border-bottom:1px dotted silver;padding:4px;}
+			h1{text-align:center;}
+			h2{cursor:move!important;background-color:#F30;color:#fff;padding:3px;}
+			h2 span{float:right;font-size:12px;font-weight:normal;padding:1px;}
+			h2 span a{color:#fff;text-decoration:none;}
+			div#drop-esquerda,div#drop-direita{width:490px;float:left;min-width:490px;min-height:30px;}
+			.dragHelper{border:4px dashed #F0F7F9;min-height:200px;margin:4px;}
+			.itemDrag p small{display:block;margin-top:6px;}
+			.itemDrag p a{font-weight:900;text-decoration:none;border-bottom:1px dotted blue;}
+			div#voltar{text-align:center;border: 1px dotted silver;width:960px;margin:0 auto;padding:4px;}
+		</style>	
+		
+	</head>
+	<body>
+		<div id="content">
+			<h1>Drag and Drop v2</h1>
+
+			<div id="voltar">Voltar para o artigo original em: <br /><a href="http://www.daviferreira.com/blog/2009/09/28/interface-drag-and-drop-com-jquery-atualizado.html">http://www.daviferreira.com/blog/2009/09/28/interface-drag-and-drop-com-jquery-atualizado.html</a></div>
+
+			<div id="drop-esquerda" class="recebeDrag">
+			  <div id="aassinados" class="itemDrag">
+			    <h2><span><a href="#" class="lnk-minimizar">[ - ]</a> <a href="#" class="lnk-remover">[ x ]</a></span>abaixo-assinados mais aderidos</h2>
+			    <ul>
+			      <li>
+			        <p><a href="#">Um milhão de hectares ou um milhão de reais? <small>7 assinaturas</small></a></p>
+			      </li>
+
+			      <li>
+			        <p><a href="#">Majoramento da pena de políticos corruptos <small>6 assinaturas</small></a></p>
+			      </li>
+			      <li>
+			        <p><a href="#">Pena de Morte para Politicos Corruptos <small>4 assinaturas</small></a></p>
+			      </li>
+			    </ul>
+
+			  </div>
+			  <!-- / box abaxo-assinados -->
+			  <div id="debates" class="itemDrag">
+			    <h2><span><a href="#" class="lnk-minimizar">[ - ]</a> <a href="#" class="lnk-remover">[ x ]</a></span>debates mais polêmicos</h2>
+			    <ul>
+			      <li>
+			        <p><a href="#">Majoramento da pena de políticos corruptos<small>8 comentários - 4 apoiaram </small></a></p>
+
+			      </li>
+			      <li>
+			        <p><a href="#">Vamos apagar o apagão aéreo?<small>7 comentários - 2 apoiaram </small></a></p>
+			      </li>
+			      <li>
+			        <p><a href="#">Um milhão de hectares ou um milhão de reais?<small>5 comentários - 2 apoiaram </small></a></p>
+			      </li>
+
+			    </ul>
+			  </div>
+			  <!-- / box debates -->
+			</div>
+			<!-- / box drop-esquerda -->
+			<div id="drop-direita" class="recebeDrag">
+			  <div id="perfis" class="itemDrag">
+			    <h2><span><a href="#" class="lnk-minimizar">[ - ]</a> <a href="#" class="lnk-remover">[ x ]</a></span>perfis cadastrados</h2>
+			    <ul>
+			      <li>
+
+			        <p><a href="#">Bruno Magrani de Souza<small>Rio de Janeiro - Rio de Janeiro
+			          <!-- -  anos | Empresário -->
+			          </small></a></p>
+			      </li>
+			      <li>
+			        <p><a href="#">Armando Silva<small>Niter&oacute;i - Rio de Janeiro
+			          <!-- -  anos | Empresário -->
+			          </small></a></p>
+
+			      </li>
+			      <li>
+			        <p><a href="#">Bruna<small>Rio de Janeiro - Rio de Janeiro
+			          <!-- -  anos | Empresário -->
+			          </small></a></p>
+			      </li>
+			    </ul>
+			  </div>
+			  <!-- / box perfil cadastrado -->
+
+			  <div id="blog" class="itemDrag">
+			    <h2><span><a href="#" class="lnk-minimizar">[ - ]</a> <a href="#" class="lnk-remover">[ x ]</a></span>democracia blog</h2>
+			    <ul>
+			      <li>
+			        <p><a href="#">Esboçando a inclusão digital... <small>06/08/2007 13:47</small></a></p>
+			      </li>
+			      <li>
+
+			        <p><a href="#" é mais do mesmo cansaço <small>31/07/2007 18:05</small></a></p>
+			      </li>
+			      <li>
+			        <p><a href="#">Quando a estética tropeça na ética... e na dor do luto <small>20/07/2007 11:00</small></a></p>
+			      </li>
+			    </ul>
+			  </div>
+
+			  <!-- / box blog -->
+			</div>
+			<!-- / box drop-direita -->
+			
+		</div>
+
+		<script type="text/javascript">
+		$(function(){
+			// configura drag and drop
+			$(".recebeDrag").sortable({
+				connectWith: ['.recebeDrag'],
+				placeholder: 'dragHelper',
+				scroll: true,
+				revert: true,
+				stop: function( e, ui ) {
+					salvaCookie();
+				}
+			});
+			// minimizar boxes
+			$('.lnk-minimizar').click(function(){
+				var ul = $(this).parent().parent().parent().find('ul');
+				if( $(ul).is(':visible') ) {
+					$(ul).slideUp();
+					$(this).html('[ + ]');
+				} else {
+					$(ul).slideDown();
+					$(this).html('[ - ]');
+				}
+				return false;
+			});
+			// remover box
+			$('.lnk-remover').click(function(){
+				$(this).parent().parent().parent().fadeOut();
+				return false;
+			});
+			// configuração inicial do cookie
+			if( $.cookie('df_draganddrop') ) {
+				var ordem = $.cookie('df_draganddrop').split('|');
+				// posiciona boxes nos containers certos
+				$('#drop-esquerda div.itemDrag').each(function(){
+					if( ordem[0].search( $(this).attr('id') ) == -1 ) $('#drop-direita').append($(this));
+				});
+				$('#drop-direita div.itemDrag').each(function(){
+					if( ordem[1].search( $(this).attr('id') ) == -1 ) $('#drop-esquerda').append($(this));
+				});
+				// ordena containers
+				var esquerda = ordem[0].split(',');
+				for( i = 0; i<= esquerda.length; i++ ) $('#drop-esquerda').append($('#'+esquerda[i]));
+				var direita = ordem[1].split(',');
+				for( i = 0; i<= direita.length; i++ ) $('#drop-direita').append($('#'+direita[i]));
+			} else {
+				$.cookie('df_draganddrop', '', { expires: 7, path: '/' });
+			}
+		});	
+		// salva cookie
+		var salvaCookie = function() {
+			var ordem = $('#drop-esquerda').sortable('toArray');
+			ordem += '|' + $('#drop-direita').sortable('toArray');
+			$.cookie('df_draganddrop', ordem);
+		};
+		</script>
+	</body>
+</html>
